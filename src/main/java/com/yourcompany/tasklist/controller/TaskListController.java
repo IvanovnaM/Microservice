@@ -21,5 +21,24 @@ public class TaskListController {
     public List<TaskListDTO> getAllTaskLists() {
         return taskListService.getAllTaskLists();
     }
-    // Методы для получения, обновления и удаления TaskList по ID
+    // Получение списка задач по ID
+    @GetMapping("/{taskListId}")
+    public ResponseEntity<TaskList> getTaskListById(@PathVariable long taskListId) {
+        Optional<TaskList> taskList = taskListService.getTaskListById(taskListId);
+        return taskList.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Обновление списка задач
+    @PutMapping("/{taskListId}")
+    public ResponseEntity<TaskList> updateTaskList(@PathVariable long taskListId, @RequestBody TaskList taskList) {
+        Optional<TaskList> updatedTaskList = taskListService.updateTaskList(taskListId, taskList.getName());
+        return updatedTaskList.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Удаление списка задач
+    @DeleteMapping("/{taskListId}")
+    public ResponseEntity<Void> deleteTaskList(@PathVariable long taskListId) {
+        boolean isDeleted = taskListService.deleteTaskList(taskListId);
+        return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
 }

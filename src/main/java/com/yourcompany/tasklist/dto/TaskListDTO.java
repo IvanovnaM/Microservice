@@ -5,7 +5,6 @@ public class TaskListDTO {
     @NotBlank(message = "Name cannot be blank")
     private String name;
     private Long taskListId;
-    private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

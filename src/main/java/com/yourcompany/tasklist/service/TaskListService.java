@@ -4,7 +4,7 @@ import com.yourcompany.tasklist.model.TaskList;
 import com.yourcompany.tasklist.repository.TaskListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.Optional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,5 +27,23 @@ public class TaskListService {
                 .collect(Collectors.toList());
     }
 
-    // методы для обновления, удаления и получения TaskList по ID
+    // Получение списка задач по ID
+    public Optional<TaskList> getTaskListById(long taskListId) {
+        return taskLists.stream().filter(taskList -> taskList.getTaskListId() == taskListId).findFirst();
+    }
+
+    // Обновление списка задач
+    public Optional<TaskList> updateTaskList(long taskListId, String newName) {
+        Optional<TaskList> taskListOpt = getTaskListById(taskListId);
+        taskListOpt.ifPresent(taskList -> {
+            taskList.setName(newName);
+            taskList.setUpdatedAt(LocalDateTime.now());
+        });
+        return taskListOpt;
+    }
+
+    // Удаление списка задач
+    public boolean deleteTaskList(long taskListId) {
+        return taskLists.removeIf(taskList -> taskList.getTaskListId() == taskListId);
+    }
 }
